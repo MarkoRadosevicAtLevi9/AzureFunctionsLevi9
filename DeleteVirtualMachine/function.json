@@ -1,0 +1,12 @@
+﻿{
+  "disabled": false,
+  "bindings": [
+    {
+      "name": "triggerInput",
+      "type": "queueTrigger",
+      "direction": "in",
+      "queueName": "delete-vm-queue",
+      "connection": "levi9StorageAccountDemo"
+    }
+  ]
+}
