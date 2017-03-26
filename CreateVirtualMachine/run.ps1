@@ -1,7 +1,7 @@
 ﻿$in = Get-Content $triggerInput
 Write-Output "Function processed queue message '$in'"
 
-$inputParam = $in | ConvertFrom-Json
+$inputParam = [string]::Join(' ', $in) | ConvertFrom-Json
 
 Write-Output "Starting PS execution"
 Function GetRandomString(
