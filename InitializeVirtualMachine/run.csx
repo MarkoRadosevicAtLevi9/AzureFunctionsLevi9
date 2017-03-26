@@ -1,7 +1,8 @@
 ﻿#load "..\Shared\Encryption.cs"
+#r "Newtonsoft.Json"
 using System.Net;
 using System.Security.Cryptography;
-
+using Newtonsoft.Json;
 
 public class VirtualMachine
 {
@@ -10,7 +11,7 @@ public class VirtualMachine
     public string VirtualMachineName { get; set; }
 }
 
-public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter log, IAsyncCollector<VirtualMachine> outputQueueItem)
+public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter log, IAsyncCollector<string> outputQueueItem)
 {
     log.Info($"C# HTTP trigger function processed a request. RequestUri={req.RequestUri}");
 
@@ -52,7 +53,7 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
          VirtualMachineName = virtualMachineName
      };
 
-    await outputQueueItem.AddAsync(virtualMachine);
+    await outputQueueItem.AddAsync(JsonConvert.SerializeObject(virtualMachine));
 
     return req.CreateResponse(HttpStatusCode.OK, new
     {
