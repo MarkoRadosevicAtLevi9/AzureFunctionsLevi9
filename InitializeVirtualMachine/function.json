@@ -1,23 +1,26 @@
 ﻿{
-  "disabled": false,
   "bindings": [
     {
       "authLevel": "anonymous",
       "name": "req",
       "type": "httpTrigger",
-      "direction": "in"
+      "direction": "in",
+      "methods": [
+        "post"
+      ]
     },
     {
-      "name": "outputQueueItem",
-      "type": "queueTrigger",
-      "direction": "out",
-      "queueName": "create-vm-queue",
-      "connection": "AzureWebJobsStorage"
-    },
-    {
-      "name": "res",
+      "name": "$return",
       "type": "http",
       "direction": "out"
+    },
+    {
+      "type": "queue",
+      "name": "outputQueueItem",
+      "queueName": "create-vm-queue",
+      "connection": "AzureWebJobsStorage",
+      "direction": "out"
     }
-  ]
+  ],
+  "disabled": false
 }
