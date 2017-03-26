@@ -90,7 +90,7 @@ Try
 		Set-AzureRmVMSourceImage -PublisherName MicrosoftWindowsServer -Offer WindowsServer -Skus 2016-Datacenter -Version latest | `
 		Add-AzureRmVMNetworkInterface -Id $nic.Id
 		$randomString = GetRandomString 4
-		Set-AzureRmVMOSDisk -VM $vmConfig -Name "vmOSDisk"+$randomString -VhdUri "https://testwebtorage.blob.core.windows.net/vhds/vmOSDisk"+$randomString+".vhd" -CreateOption fromImage
+		Set-AzureRmVMOSDisk -VM $vmConfig -Name "vmOSDisk123" -VhdUri "https://testwebtorage.blob.core.windows.net/vhds/vmOSDisk123.vhd" -CreateOption fromImage
 
 		New-AzureRmVM -ResourceGroupName $resourceGroupName -Location $loc -VM $vmConfig
 
