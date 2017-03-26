@@ -20,7 +20,7 @@ Write-Output "Setting strict mode"
 Set-StrictMode -Version 2
 try { cd (Split-Path -parent $PSCommandPath) } catch {}
 
-$RootFolder = "D:\home\site\wwwroot\CreateVM"
+$RootFolder = "D:\home\site\wwwroot\CreateVirtualMachine"
 
 $configFile = "$RootFolder\config.json"
 Write-Output "Load configuration from $configFile"
