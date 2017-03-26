@@ -8,6 +8,13 @@
       "direction": "in"
     },
     {
+      "name": "outputQueueItem",
+      "type": "queueTrigger",
+      "direction": "out",
+      "queueName": "create-vm-queue",
+      "connection": "AzureWebJobsStorage"
+    },
+    {
       "name": "res",
       "type": "http",
       "direction": "out"
