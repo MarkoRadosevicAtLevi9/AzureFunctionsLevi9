@@ -26,10 +26,6 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
         .FirstOrDefault(q => string.Compare(q.Key, "virtualMachineName", true) == 0)
         .Value;
 
-    var encryption = new Encryption();
-
-    var password = encryption.EncryptToString(encryptedPassword);
-
     // Get request body
     dynamic data = await req.Content.ReadAsAsync<object>();
 
@@ -50,7 +46,11 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
     ? req.CreateResponse(HttpStatusCode.BadRequest, "Please pass a virtual machine name on the query string or in the request body")
     : req.CreateResponse(HttpStatusCode.OK, "Hello " + virtualMachineName);
 
-     var virtualMachine = new VirtualMachine
+    var encryption = new Encryption();
+
+    var password = encryption.EncryptToString(encryptedPassword);
+
+    var virtualMachine = new VirtualMachine
     {
          UserName = userName,
          Password = password,

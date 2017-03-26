@@ -1,4 +1,7 @@
-﻿Write-Output "Starting PS execution"
+﻿$in = Get-Content $triggerInput
+Write-Output "Function processed queue message '$in'"
+
+Write-Output "Starting PS execution"
 
 
 $Global:ErrorActionPreference = "Stop"
@@ -83,7 +86,7 @@ Catch
 {
 	$errorMessage = $_.Exception.Message
 	$fullError = $_.Exception.ToString()
-	
+
 	Write-Output "FAILED: $fullError"
 	Write-Error $fullError
 }
