@@ -1,6 +1,8 @@
 ﻿$in = Get-Content $triggerInput
 Write-Output "Function processed queue message '$in'"
 
+$inputParam = $in | ConvertFrom-Json
+
 Write-Output "Starting PS execution"
 Function GetRandomString(
     [int]$Length
@@ -41,9 +43,9 @@ Try
 	$loc = 'West Europe'
 
 	$resourceGroupName = "LEVI9-resource-group"
-	$vmName = $in.VirtualMachineName
-	$vmAdminUsername = $in.UserName
-	$vmAdminPassword = $in.Password
+	$vmName = $inputParam.VirtualMachineName
+	$vmAdminUsername = $inputParam.UserName
+	$vmAdminPassword = $inputParam.Password
 	$subnetName = "LEVI9-subnet"
 	$vNetName = "LEVI9-virtual-network"
 	$secGroupRuleName = "LEVI9-security-group-rules"

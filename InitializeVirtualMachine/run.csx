@@ -43,7 +43,7 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
 
     var encryption = new Encryption();
 
-    var password = encryption.EncryptToString(encryptedPassword);
+    var password = encryption.DecryptString(encryptedPassword);
 
     var virtualMachine = new VirtualMachine
     {
