@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿#load "..\Shared\Encryption.cs"
+using System.Net;
 using System.Security.Cryptography;
 
 
@@ -14,7 +15,7 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
     log.Info($"C# HTTP trigger function processed a request. RequestUri={req.RequestUri}");
 
     // parse query parameter
-    string username = req.GetQueryNameValuePairs()
+    string userName = req.GetQueryNameValuePairs()
         .FirstOrDefault(q => string.Compare(q.Key, "userName", true) == 0)
         .Value;
 
@@ -30,21 +31,15 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
     dynamic data = await req.Content.ReadAsAsync<object>();
 
     // Set arguments to query string or body data
-    userName = username ?? data?.username;
-    password = password ?? data?.password;
+    userName = userName ?? data?.userName;
+    encryptedPassword = encryptedPassword ?? data?.password;
     virtualMachineName = virtualMachineName ?? data?.virtualMachineName;
 
-    return userName == null
-        ? req.CreateResponse(HttpStatusCode.BadRequest, "Please pass a user name on the query string or in the request body")
-        : req.CreateResponse(HttpStatusCode.OK, "Hello " + userName);
-
-    return password == null
-    ? req.CreateResponse(HttpStatusCode.BadRequest, "Please pass a password on the query string or in the request body")
-    : req.CreateResponse(HttpStatusCode.OK, "Hello " + password);
-
-    return virtualMachineName == null
-    ? req.CreateResponse(HttpStatusCode.BadRequest, "Please pass a virtual machine name on the query string or in the request body")
-    : req.CreateResponse(HttpStatusCode.OK, "Hello " + virtualMachineName);
+    if(userName==null || encryptedPassword == null || virtualMachineName == null)
+    {
+        req.CreateResponse(HttpStatusCode.BadRequest, "One or more parameters are not valid or not passed");
+    }
+  
 
     var encryption = new Encryption();
 
@@ -57,7 +52,7 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
          VirtualMachineName = virtualMachineName
      };
 
-    await outputQueueItem.AdAsync(virtualMachine);
+    await outputQueueItem.AddAsync(virtualMachine);
 
     return req.CreateResponse(HttpStatusCode.OK, new
     {

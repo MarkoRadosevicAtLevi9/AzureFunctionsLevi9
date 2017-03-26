@@ -1,10 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Security.Cryptography;
-
-
-namespace ConsoleApplication1
-{
     public class Encryption
     {
         // Change these keys
@@ -122,4 +118,4 @@ namespace ConsoleApplication1
             return tempStr;
         }
     }
-}
+
