@@ -2,7 +2,17 @@
 Write-Output "Function processed queue message '$in'"
 
 Write-Output "Starting PS execution"
-
+Function GetRandomString(
+    [int]$Length
+)
+{
+	$set = "abcdefghijklmnopqrstuvwxyz0123456789".ToCharArray()
+	$result = ""
+	for ($x = 0; $x -lt $Length; $x++) {
+		$result += $set | Get-Random
+	}
+	return $result
+}
 
 $Global:ErrorActionPreference = "Stop"
 
@@ -31,7 +41,9 @@ Try
 	$loc = 'West Europe'
 
 	$resourceGroupName = "LEVI9-resource-group"
-	$vmName = "LEVI9vm"
+	$vmName = $in.VirtualMachineName
+	$vmAdminUsername = $in.UserName
+	$vmAdminPassword = $in.Password
 	$subnetName = "LEVI9-subnet"
 	$vNetName = "LEVI9-virtual-network"
 	$secGroupRuleName = "LEVI9-security-group-rules"
@@ -68,16 +80,21 @@ Try
 		-SubnetId $vnet.Subnets[0].Id -PublicIpAddressId $pip.Id -NetworkSecurityGroupId $nsg.Id
 
 		# Create a virtual machine configuration
-		$vmsecpasswd = ConvertTo-SecureString "Password1?" -AsPlainText -Force;
-		$vmCreds = New-Object System.Management.Automation.PSCredential ("levi9", $vmsecpasswd)
+		$vmsecpasswd = ConvertTo-SecureString $vmAdminPassword -AsPlainText -Force;
+		$vmCreds = New-Object System.Management.Automation.PSCredential ($vmAdminUsername, $vmsecpasswd)
 
 		$vmConfig = New-AzureRmVMConfig -VMName $vmName -VMSize Standard_DS1_V2 | `
 		Set-AzureRmVMOperatingSystem -Windows -ComputerName $vmName -Credential $vmCreds  | `
 		Set-AzureRmVMSourceImage -PublisherName MicrosoftWindowsServer -Offer WindowsServer -Skus 2016-Datacenter -Version latest | `
 		Add-AzureRmVMNetworkInterface -Id $nic.Id
-		Set-AzureRmVMOSDisk -VM $vmConfig -Name "vm2OSDisk" -VhdUri "https://testwebtorage.blob.core.windows.net/vhds/vm2OSDisk.vhd" -CreateOption fromImage
+		$randomString = GetRandomString 4
+		Set-AzureRmVMOSDisk -VM $vmConfig -Name "vmOSDisk"+$randomString -VhdUri "https://testwebtorage.blob.core.windows.net/vhds/vmOSDisk"+$randomString+".vhd" -CreateOption fromImage
 
 		New-AzureRmVM -ResourceGroupName $resourceGroupName -Location $loc -VM $vmConfig
+
+		$content = [string]::Format('{{ "Subject": "Virtual machine created", "Content": [ {{ "Type": "text/plain", "Value": "Virtual machine ({0}) has been created!" }} ] }}', $vmName)
+
+		$content | Out-File -Encoding UTF8 $message
 
 	}
 
