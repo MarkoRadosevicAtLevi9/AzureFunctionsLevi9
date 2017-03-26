@@ -2,7 +2,17 @@
 Write-Output "Function processed queue message '$in'"
 
 Write-Output "Starting PS execution"
-
+Function GetRandomString(
+    [int]$Length
+)
+{
+	$set = "abcdefghijklmnopqrstuvwxyz0123456789".ToCharArray()
+	$result = ""
+	for ($x = 0; $x -lt $Length; $x++) {
+		$result += $set | Get-Random
+	}
+	return $result
+}
 
 $Global:ErrorActionPreference = "Stop"
 
@@ -77,7 +87,8 @@ Try
 		Set-AzureRmVMOperatingSystem -Windows -ComputerName $vmName -Credential $vmCreds  | `
 		Set-AzureRmVMSourceImage -PublisherName MicrosoftWindowsServer -Offer WindowsServer -Skus 2016-Datacenter -Version latest | `
 		Add-AzureRmVMNetworkInterface -Id $nic.Id
-		Set-AzureRmVMOSDisk -VM $vmConfig -Name "vm2OSDisk" -VhdUri "https://testwebtorage.blob.core.windows.net/vhds/vm2OSDisk.vhd" -CreateOption fromImage
+		$randomString = GetRandomString 4
+		Set-AzureRmVMOSDisk -VM $vmConfig -Name "vmOSDisk"+$randomString -VhdUri "https://testwebtorage.blob.core.windows.net/vhds/vmOSDisk"+$randomString+".vhd" -CreateOption fromImage
 
 		New-AzureRmVM -ResourceGroupName $resourceGroupName -Location $loc -VM $vmConfig
 
