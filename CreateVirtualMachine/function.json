@@ -7,6 +7,15 @@
       "direction": "in",
       "queueName": "create-vm-queue",
       "connection": "AzureWebJobsStorage"
+    },
+    {
+      "type": "sendGrid",
+      "name": "message",
+      "apiKey": "Levi9SendGridAPIKey",
+      "direction": "out",
+      "to": "dejanslijepcevic@hotmail.com",
+      "subject": "Virtual machine has been created",
+      "from": "dejan.slijepcevic@outlook.com"
     }
   ]
 }
