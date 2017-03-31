@@ -90,7 +90,7 @@ Try
 		Set-AzureRmVMSourceImage -PublisherName MicrosoftWindowsServer -Offer WindowsServer -Skus 2016-Datacenter -Version latest | `
 		Add-AzureRmVMNetworkInterface -Id $nic.Id
 		$randomString = GetRandomString 4
-		Set-AzureRmVMOSDisk -VM $vmConfig -Name "OSDis" -VhdUri "https://testwebtorage.blob.core.windows.net/vhds/OSDisk.vhd" -CreateOption fromImage
+		Set-AzureRmVMOSDisk -VM $vmConfig -Name "OSDiskTest" -VhdUri "https://testwebtorage.blob.core.windows.net/vhds/OSDiskTest.vhd" -CreateOption fromImage
 		$content = [string]::Format('{{ "Subject": "Virtual machine created", "Content": [ {{ "Type": "text/plain", "Value": "Virtual machine ({0}) has been created!" }} ] }}', $vmName)
 
 		$content | Out-File -Encoding UTF8 $message
